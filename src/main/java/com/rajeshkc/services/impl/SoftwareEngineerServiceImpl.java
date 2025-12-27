@@ -1,7 +1,6 @@
 package com.rajeshkc.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import com.rajeshkc.dto.SoftwareEngineerDto;
 import com.rajeshkc.entities.SoftwareEngineer;
 import com.rajeshkc.repositories.SoftwareEngineerRepository;
 import com.rajeshkc.services.SoftwareEngineerService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service

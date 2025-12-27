@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rajeshkc.dto.AddUpdateSoftwareEngineerDto;
 import com.rajeshkc.dto.SoftwareEngineerDto;
-import com.rajeshkc.entities.SoftwareEngineer;
 import com.rajeshkc.services.SoftwareEngineerService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -33,7 +33,7 @@ public class SoftwareEngineerController {
     }
 
     @PostMapping
-    public ResponseEntity<SoftwareEngineerDto> create(@RequestBody AddUpdateSoftwareEngineerDto softwareEngineer) {
+    public ResponseEntity<SoftwareEngineerDto> create(@RequestBody @Valid AddUpdateSoftwareEngineerDto softwareEngineer) {
         return ResponseEntity.status(HttpStatus.CREATED).body(softwareEngineerService.saveSoftwareEngineer(softwareEngineer));
     }
 
@@ -44,7 +44,7 @@ public class SoftwareEngineerController {
 
     @PutMapping("{id}")
     public ResponseEntity<SoftwareEngineerDto> updateEngineer(@PathVariable Long id,
-            @RequestBody AddUpdateSoftwareEngineerDto softwareEngineer) {
+            @RequestBody @Valid AddUpdateSoftwareEngineerDto softwareEngineer) {
         return ResponseEntity.ok(softwareEngineerService.updateEngineer(id, softwareEngineer));
     }
 

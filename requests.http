@@ -22,7 +22,6 @@ PUT {{rootURL}}/software-engineers/1
 Content-Type: application/json
 
 {
-    "id": 1,
     "name": "Ram",
     "techStack": "js, node, react, next.js"
 }
