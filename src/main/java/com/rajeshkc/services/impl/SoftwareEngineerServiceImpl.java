@@ -2,7 +2,12 @@ package com.rajeshkc.services.impl;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import com.rajeshkc.dto.AddUpdateSoftwareEngineerDto;
+import com.rajeshkc.dto.SoftwareEngineerDto;
 import com.rajeshkc.entities.SoftwareEngineer;
 import com.rajeshkc.repositories.SoftwareEngineerRepository;
 import com.rajeshkc.services.SoftwareEngineerService;
@@ -14,33 +19,45 @@ import lombok.RequiredArgsConstructor;
 public class SoftwareEngineerServiceImpl implements SoftwareEngineerService {
 
     private final SoftwareEngineerRepository softwareEngineerRepository;
+    private final ModelMapper modelMapper;
 
-    public List<SoftwareEngineer> getAllSoftwareEngineers() {
-        return softwareEngineerRepository.findAll();
+    @Override
+    public List<SoftwareEngineerDto> getAllSoftwareEngineers() {
+        return softwareEngineerRepository.findAll()
+                .stream()
+                .map(e -> modelMapper.map(e, SoftwareEngineerDto.class))
+                .toList();
     }
 
-    public SoftwareEngineer saveSoftwareEngineer(SoftwareEngineer softwareEngineer) {
-        return softwareEngineerRepository.save(softwareEngineer);
+    @Override
+    public SoftwareEngineerDto saveSoftwareEngineer(AddUpdateSoftwareEngineerDto softwareEngineer) {
+        SoftwareEngineer engineer = modelMapper.map(softwareEngineer, SoftwareEngineer.class);
+        engineer = softwareEngineerRepository.save(engineer);
+        return modelMapper.map(engineer, SoftwareEngineerDto.class);
     }
 
-    public Optional<SoftwareEngineer> getSoftwareEngineerById(Long id) {
-        return softwareEngineerRepository.findById(id);
+    @Override
+    public SoftwareEngineerDto getSoftwareEngineerById(Long id) {
+        SoftwareEngineer softwareEngineer = softwareEngineerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Software Engineer not found with id " + id));
+        return modelMapper.map(softwareEngineer, SoftwareEngineerDto.class);
     }
 
-    @Transactional
-    public SoftwareEngineer updateEngineer(Long id, SoftwareEngineer details) {
-        return softwareEngineerRepository.findById(id).map(existingEngineer -> {
-            existingEngineer.setName(details.getName());
-            existingEngineer.setTechStack(details.getTechStack());
-            return softwareEngineerRepository.save(existingEngineer);
-        }).orElseThrow(() -> new RuntimeException("Engineer not found with id: " + id));
+    @Override
+    public SoftwareEngineerDto updateEngineer(Long id, AddUpdateSoftwareEngineerDto details) {
+        SoftwareEngineer softwareEngineer = softwareEngineerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Software Engineer not found with id " + id));
+
+        modelMapper.map(details, softwareEngineer);
+        softwareEngineer = softwareEngineerRepository.save(softwareEngineer);
+        return modelMapper.map(softwareEngineer, SoftwareEngineerDto.class);
     }
 
-    public boolean deleteEngineer(Long id) {
-        if (softwareEngineerRepository.existsById(id)) {
-            softwareEngineerRepository.deleteById(id);
-            return true;
+    @Override
+    public void deleteEngineer(Long id) {
+        if (!softwareEngineerRepository.existsById(id)) {
+            new IllegalArgumentException("Software Engineer not found with id " + id);
         }
-        return false;
+        softwareEngineerRepository.deleteById(id);
     }
 }

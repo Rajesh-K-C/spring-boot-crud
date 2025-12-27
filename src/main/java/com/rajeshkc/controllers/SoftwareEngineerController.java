@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rajeshkc.entities.ApiResponse;
+import com.rajeshkc.dto.AddUpdateSoftwareEngineerDto;
+import com.rajeshkc.dto.SoftwareEngineerDto;
 import com.rajeshkc.entities.SoftwareEngineer;
 import com.rajeshkc.services.SoftwareEngineerService;
 
@@ -27,44 +28,29 @@ public class SoftwareEngineerController {
     private final SoftwareEngineerService softwareEngineerService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<SoftwareEngineer>>> getEngineers() {
-        List<SoftwareEngineer> engineers = softwareEngineerService.getAllSoftwareEngineers();
-        return ResponseEntity.ok(new ApiResponse<>(true, "Fetched all software engineers", engineers));
+    public ResponseEntity<List<SoftwareEngineerDto>> getEngineers() {
+        return ResponseEntity.ok(softwareEngineerService.getAllSoftwareEngineers());
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<SoftwareEngineer>> create(@RequestBody SoftwareEngineer softwareEngineer) {
-        SoftwareEngineer saved = softwareEngineerService.saveSoftwareEngineer(softwareEngineer);
-        return new ResponseEntity<>(
-                new ApiResponse<>(true, "Software Engineer created", saved),
-                HttpStatus.CREATED);
+    public ResponseEntity<SoftwareEngineerDto> create(@RequestBody AddUpdateSoftwareEngineerDto softwareEngineer) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(softwareEngineerService.saveSoftwareEngineer(softwareEngineer));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<SoftwareEngineer>> getEngineerById(@PathVariable Long id) {
-        return softwareEngineerService.getSoftwareEngineerById(id)
-                .map(e -> ResponseEntity.ok(new ApiResponse<>(true, "Found", e)))
-                .orElse(new ResponseEntity<>(new ApiResponse<>(false, "Not found", null),
-                        HttpStatus.NOT_FOUND));
+    public ResponseEntity<SoftwareEngineerDto> getEngineerById(@PathVariable Long id) {
+        return ResponseEntity.ok(softwareEngineerService.getSoftwareEngineerById(id));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse<SoftwareEngineer>> updateEngineer(@PathVariable Long id,
-            @RequestBody SoftwareEngineer softwareEngineer) {
-        try {
-            SoftwareEngineer updatedEngineer = softwareEngineerService.updateEngineer(id, softwareEngineer);
-            return ResponseEntity.ok(new ApiResponse<>(true, "Engineer updated", updatedEngineer));
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(new ApiResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<SoftwareEngineerDto> updateEngineer(@PathVariable Long id,
+            @RequestBody AddUpdateSoftwareEngineerDto softwareEngineer) {
+        return ResponseEntity.ok(softwareEngineerService.updateEngineer(id, softwareEngineer));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteEngineer(@PathVariable Long id) {
-        if (softwareEngineerService.deleteEngineer(id)) {
-            return ResponseEntity.ok(new ApiResponse<>(true, "Software Engineer deleted", null));
-        }
-        return new ResponseEntity<>(new ApiResponse<>(false, "Software Engineer not found", null),
-                HttpStatus.NOT_FOUND);
+    public ResponseEntity<Void> deleteEngineer(@PathVariable Long id) {
+        softwareEngineerService.deleteEngineer(id);
+        return ResponseEntity.noContent().build();
     }
 }

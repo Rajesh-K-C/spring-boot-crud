@@ -1,14 +1,14 @@
 package com.rajeshkc.services;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.rajeshkc.entities.SoftwareEngineer;
+import com.rajeshkc.dto.AddUpdateSoftwareEngineerDto;
+import com.rajeshkc.dto.SoftwareEngineerDto;
 
 public interface SoftwareEngineerService {
-    List<SoftwareEngineer> getAllSoftwareEngineers();
-    SoftwareEngineer saveSoftwareEngineer(SoftwareEngineer softwareEngineer);
-    Optional<SoftwareEngineer> getSoftwareEngineerById(Long id);
-    SoftwareEngineer updateEngineer(Long id, SoftwareEngineer details);
-    boolean deleteEngineer(Long id);
+    List<SoftwareEngineerDto> getAllSoftwareEngineers();
+    SoftwareEngineerDto saveSoftwareEngineer(AddUpdateSoftwareEngineerDto softwareEngineer);
+    SoftwareEngineerDto getSoftwareEngineerById(Long id);
+    SoftwareEngineerDto updateEngineer(Long id, AddUpdateSoftwareEngineerDto details);
+    void deleteEngineer(Long id);
 }
