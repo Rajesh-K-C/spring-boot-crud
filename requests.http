@@ -28,3 +28,11 @@ Content-Type: application/json
 
 ###
 DELETE {{rootURL}}/software-engineers/1
+
+###
+PATCH {{rootURL}}/software-engineers/1
+Content-Type: application/json
+
+{
+    "techStack": "Java, Spring Boot"
+}

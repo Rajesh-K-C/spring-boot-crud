@@ -1,11 +1,13 @@
 package com.rajeshkc.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,8 +35,10 @@ public class SoftwareEngineerController {
     }
 
     @PostMapping
-    public ResponseEntity<SoftwareEngineerDto> create(@RequestBody @Valid AddUpdateSoftwareEngineerDto softwareEngineer) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(softwareEngineerService.saveSoftwareEngineer(softwareEngineer));
+    public ResponseEntity<SoftwareEngineerDto> create(
+            @RequestBody @Valid AddUpdateSoftwareEngineerDto softwareEngineer) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(softwareEngineerService.saveSoftwareEngineer(softwareEngineer));
     }
 
     @GetMapping("/{id}")
@@ -42,15 +46,21 @@ public class SoftwareEngineerController {
         return ResponseEntity.ok(softwareEngineerService.getSoftwareEngineerById(id));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<SoftwareEngineerDto> updateEngineer(@PathVariable Long id,
             @RequestBody @Valid AddUpdateSoftwareEngineerDto softwareEngineer) {
         return ResponseEntity.ok(softwareEngineerService.updateEngineer(id, softwareEngineer));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEngineer(@PathVariable Long id) {
         softwareEngineerService.deleteEngineer(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<SoftwareEngineerDto> updatePartialSoftwareEngineer(@PathVariable Long id,
+            @RequestBody Map<Object, Object> updates) {
+        return ResponseEntity.ok(softwareEngineerService.updatePartialSoftwareEngineer(id, updates));
     }
 }

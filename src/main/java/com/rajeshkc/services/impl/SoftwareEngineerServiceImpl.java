@@ -1,6 +1,7 @@
 package com.rajeshkc.services.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -57,5 +58,26 @@ public class SoftwareEngineerServiceImpl implements SoftwareEngineerService {
             new IllegalArgumentException("Software Engineer not found with id " + id);
         }
         softwareEngineerRepository.deleteById(id);
+    }
+
+    @Override
+    public SoftwareEngineerDto updatePartialSoftwareEngineer(Long id, Map<Object, Object> updates) {
+        SoftwareEngineer softwareEngineer = softwareEngineerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Software Engineer not found with id " + id));
+        updates.forEach((field, value)->{
+            switch ((String) field) {
+                case "name":
+                    softwareEngineer.setName((String) value);
+                    break;
+                case "techStack":
+                    softwareEngineer.setTechStack((String) value);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Field is not supported");
+            }
+        });
+
+        SoftwareEngineer updatedEngineer = softwareEngineerRepository.save(softwareEngineer);
+        return modelMapper.map(updatedEngineer, SoftwareEngineerDto.class);        
     }
 }
